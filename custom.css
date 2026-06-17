@@ -1,0 +1,173 @@
+/* =========================================================
+   1. Tipografía Amigable y Variables de Color
+========================================================= */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
+
+:root {
+    --bg-app: #9680c0;          /* Fondo rosado pastel de la imagen */
+    --primary-coral: #ff5c77;   /* El color del botón de la imagen */
+    --primary-hover: #ff5c77;   /* Coral un poco más oscuro para el hover */
+    --dark-bg: #ffffff;         /* Negro profundo para contrastes */
+    --text-dark: #000000;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    /* Creamos un degradado suave inspirado en el fondo de tu imagen */
+    background: linear-gradient(135deg, #776fe0 0%, #b0c5ff 100%);
+    background-attachment: fixed;
+    color: var(--text-dark);
+}
+
+/* =========================================================
+   2. Transformando la Cabecera (Contraste Oscuro)
+========================================================= */
+/* Tomamos el div del título y lo convertimos en un bloque oscuro elegante */
+.text-center.mb-5 {
+    background-color: var(--dark-bg);
+    padding: 2.5rem 2rem;
+    border-radius: 24px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+    margin-top: 1rem;
+}
+
+.text-center.mb-5 h2 {
+    color: #000000 !important;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+}
+
+.text-center.mb-5 p {
+    color: #5c5c5c !important;
+    font-weight: 500;
+}
+
+/* =========================================================
+   3. Tarjetas (Cards) Bubbly y Flotantes
+========================================================= */
+.card {
+    border: none !important;
+    border-radius: 28px; /* Bordes mucho más redondos y amigables */
+    background-color: rgba(255, 255, 255, 0.95); /* Blanco ligeramente translúcido */
+    box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.08);
+    backdrop-filter: blur(10px);
+    padding: 1rem;
+}
+
+.card-header {
+    background-color: transparent;
+    border-bottom: 2px dashed #f0f0f0; /* Línea punteada, más casual */
+    padding: 1rem 1.5rem;
+}
+
+.card-title {
+    font-weight: 700;
+    font-size: 1.4rem;
+    color: var(--text-dark);
+}
+
+/* =========================================================
+   4. Botones: Estilo "Píldora" (Pill)
+========================================================= */
+.btn-primary {
+    background-color: var(--primary-coral) !important;
+    border-color: var(--primary-coral) !important;
+    border-radius: 50px !important; /* Totalmente redondo */
+    font-weight: 600;
+    padding: 0.8rem 2.5rem !important;
+    box-shadow: 0 8px 20px rgba(255, 92, 119, 0.35); /* Sombra de luz color coral */
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-hover) !important;
+    border-color: var(--primary-hover) !important;
+    transform: translateY(-3px);
+    box-shadow: 0 12px 25px rgba(255, 92, 119, 0.5);
+}
+
+/* Botones secundarios (Los de búsqueda) */
+.btn-outline-primary {
+    color: var(--primary-coral) !important;
+    border: 2px solid var(--primary-coral) !important;
+    border-radius: 50px !important;
+    font-weight: 600;
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--primary-coral) !important;
+    color: #ffffff !important;
+}
+
+.btn-outline-secondary {
+color: var(--primary-coral) !important;
+    border: 2px solid var(--primary-coral) !important;
+    border-radius: 50px !important;
+    font-weight: 600;
+}
+.btn-outline-secondary:hover {
+    background-color: var(--primary-coral) !important;
+    color: #ffffff !important;
+}
+
+/* =========================================================
+   5. Formularios Limpios y Suaves
+========================================================= */
+.form-label {
+    font-weight: 600;
+    color: #444444;
+    margin-left: 0.5rem;
+}
+
+.form-control, .form-select {
+    border-radius: 16px;
+    border: 2px solid #f1f5f9;
+    padding: 0.8rem 1.2rem;
+    font-size: 0.95rem;
+    font-weight: 500;
+    background-color: #f8fafc;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus, .form-select:focus {
+    background-color: #ffffff;
+    border-color: var(--primary-coral);
+    box-shadow: 0 0 0 4px rgba(255, 92, 119, 0.15); /* Anillo de luz coral */
+    outline: none;
+}
+
+/* =========================================================
+   6. Tabla y Etiquetas (Badges)
+========================================================= */
+.table-responsive {
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.table th {
+    background-color: #f8fafc;
+    color: #64748b;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    letter-spacing: 0.5px;
+    border-bottom: 2px solid #e2e8f0;
+    padding: 1.2rem;
+}
+
+.table td {
+    vertical-align: middle;
+    padding: 1.2rem;
+    font-weight: 500;
+    color: #334155;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+/* Insignias de Activo/Inactivo redondas */
+.badge {
+    padding: 0.6em 1.2em;
+    font-weight: 600;
+    border-radius: 50px;
+}
+.bg-success { background-color: #2ed573 !important; } /* Verde vibrante y amigable */
+.bg-danger { background-color: #ff4757 !important; }  /* Rojo sandía amigable */

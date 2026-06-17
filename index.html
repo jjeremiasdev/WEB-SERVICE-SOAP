@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Inventario | SOAP</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+</head>
+<body class="bg-light">
+    <link rel="stylesheet" href="custom.css">
+    <link rel="stylesheet" href="custom.css?v=3">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    <div class="container py-5" style="max-width: 1000px;">
+        
+        <div class="text-center mb-5">
+            <h2 class="fw-bold text-primary">📦 Panel de Inventario</h2>
+            <p class="text-muted">Servicio SOAP Interactivo</p>
+        </div>
+
+        <div class="card shadow-sm mb-4 border-0">
+            <div class="card-header bg-white border-bottom-0 pt-4 pb-0">
+                <h5 class="card-title fw-bold text-secondary mb-0">Registrar Nuevo Producto</h5>
+            </div>
+            <div class="card-body">
+                <form id="formRegistro">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Nombre del Producto</label>
+                            <input type="text" class="form-control" id="reg_nombre" placeholder="Ej: Laptop HP" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Precio ($)</label>
+                            <input type="number" class="form-control" id="reg_precio" step="0.01" placeholder="Ej: 850.50" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Stock Disponible</label>
+                            <input type="number" class="form-control" id="reg_stock" placeholder="Cantidad" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Estado</label>
+                            <select class="form-select" id="reg_estado">
+                                <option value="ACTIVO">Activo</option>
+                                <option value="INACTIVO">Inactivo</option>
+                            </select>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label fw-semibold">Descripción detallada</label>
+                            <input type="text" class="form-control" id="reg_desc" placeholder="Breve descripción...">
+                        </div>
+                        <div class="col-12 text-end mt-4">
+                            <button type="submit" class="btn btn-primary px-4 fw-semibold">Guardar en Base de Datos</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="card shadow-sm mb-4 border-0">
+            <div class="card-header bg-white border-bottom-0 pt-4 pb-0">
+                <h5 class="card-title fw-bold text-secondary mb-0">Consultar Productos</h5>
+            </div>
+            <div class="card-body">
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Buscar por ID exacto</label>
+                        <div class="input-group">
+                            <input type="number" class="form-control" id="bus_id" placeholder="Ej: 1">
+                            <button class="btn btn-outline-primary" type="button" onclick="buscar('id')">Buscar ID</button>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Buscar por coincidencia de Nombre</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="bus_nombre" placeholder="Ej: Laptop">
+                            <button class="btn btn-outline-secondary" type="button" onclick="buscar('nombre')">Buscar Nombre</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-white border-bottom-0 pt-4 pb-0">
+                <h5 class="card-title fw-bold text-secondary mb-0">Resultados de la Operación</h5>
+            </div>
+            <div class="card-body">
+                <div id="resultado">
+                    <div class="alert alert-secondary text-center" role="alert">
+                        Esperando acción del usuario...
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        document.getElementById('formRegistro').addEventListener('submit', async function(e) {
+            e.preventDefault(); 
+            const payload = {
+                accion: 'registrar',
+                nombre: document.getElementById('reg_nombre').value,
+                descripcion: document.getElementById('reg_desc').value,
+                precio: parseFloat(document.getElementById('reg_precio').value),
+                stock: parseInt(document.getElementById('reg_stock').value),
+                estado: document.getElementById('reg_estado').value
+            };
+            enviarPeticion(payload);
+            this.reset();
+        });
+
+        function buscar(tipo) {
+            let payload = { accion: tipo === 'id' ? 'buscar_id' : 'buscar_nombre' };
+            if (tipo === 'id') {
+                payload.id = document.getElementById('bus_id').value;
+            } else {
+                payload.nombre = document.getElementById('bus_nombre').value;
+            }
+            enviarPeticion(payload);
+        }
+
+        async function enviarPeticion(datos) {
+            const divResultado = document.getElementById('resultado');
+            
+            // Alerta azul de "Cargando" de Bootstrap
+            divResultado.innerHTML = `
+                <div class="alert alert-info d-flex align-items-center" role="alert">
+                    <div class="spinner-border spinner-border-sm me-2" role="status"></div>
+                    <div>Procesando petición en el servidor SOAP...</div>
+                </div>`;
+
+            try {
+                const response = await fetch('api.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(datos)
+                });
+                
+                const res = await response.json();
+                
+                if(res.status === 'success') {
+                    if (typeof res.datos === 'undefined') {
+                        // Alerta verde de Éxito de Bootstrap
+                        divResultado.innerHTML = `<div class="alert alert-success">✅ ${res.mensaje}</div>`;
+                    } else {
+                        // Si hay datos, mandamos a renderizar la tabla de Bootstrap
+                        renderizarTabla(res.datos, divResultado);
+                    }
+                } else {
+                    // Alerta roja de Error de Bootstrap
+                    divResultado.innerHTML = `<div class="alert alert-danger">❌ Error devuelto por SOAP: ${res.mensaje}</div>`;
+                }
+            } catch (error) {
+                divResultado.innerHTML = `<div class="alert alert-danger">❌ Hubo un error de conexión crítica con el servidor.</div>`;
+            }
+        }
+
+        function renderizarTabla(datos, contenedor) {
+            if (!Array.isArray(datos)) datos = [datos];
+
+            if (datos.length === 0) {
+                contenedor.innerHTML = `<div class="alert alert-warning">⚠️ No se encontraron productos con ese criterio.</div>`;
+                return;
+            }
+
+            // Construcción de la tabla usando clases de Bootstrap
+            let html = `
+            <div class="table-responsive">
+                <table class="table table-hover table-bordered align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th scope="col" class="text-center">ID</th>
+                            <th scope="col">Nombre</th>
+                            <th scope="col">Descripción</th>
+                            <th scope="col">Precio</th>
+                            <th scope="col" class="text-center">Stock</th>
+                            <th scope="col" class="text-center">Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            datos.forEach(prod => {
+                // Insignias (Badges) de Bootstrap para el estado
+                const badgeClass = prod.estado === 'ACTIVO' ? 'bg-success' : 'bg-danger';
+                
+                html += `
+                    <tr>
+                        <th scope="row" class="text-center">${prod.id}</th>
+                        <td class="fw-semibold text-primary">${prod.nombre}</td>
+                        <td class="text-muted small">${prod.descripcion || 'Sin descripción'}</td>
+                        <td class="fw-bold">$${parseFloat(prod.precio).toFixed(2)}</td>
+                        <td class="text-center">${prod.stock}</td>
+                        <td class="text-center"><span class="badge rounded-pill ${badgeClass}">${prod.estado}</span></td>
+                    </tr>
+                `;
+            });
+
+            html += `</tbody></table></div>`;
+            contenedor.innerHTML = html;
+        }
+    </script>
+</body>
+</html>
